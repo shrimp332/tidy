@@ -26,9 +26,13 @@ func main() {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
 			if set {
-				err = SetSym(args)
+				for _, arg := range args {
+					err = SetSym(arg)
+				}
 			} else if unset {
-				err = UnsetSym(args)
+				for _, arg := range args {
+					err = UnsetSym(arg)
+				}
 			} else {
 				cmd.Help()
 			}
@@ -77,14 +81,14 @@ func readTidyConf(path string) (TidyConf, error) {
 	return conf, nil
 }
 
-func SetSym(args []string) error {
-	conf, err := readTidyConf(args[0])
+func SetSym(arg string) error {
+	conf, err := readTidyConf(arg)
 	if err != nil {
 		return err
 	}
 
 	for _, s := range conf.Home {
-		absTarget, err := filepath.Abs(filepath.Join(args[0], s))
+		absTarget, err := filepath.Abs(filepath.Join(arg, s))
 		if err != nil {
 			return err
 		}
@@ -98,7 +102,7 @@ func SetSym(args []string) error {
 		}
 	}
 	for _, s := range conf.Config {
-		absTarget, err := filepath.Abs(filepath.Join(args[0], s))
+		absTarget, err := filepath.Abs(filepath.Join(arg, s))
 		if err != nil {
 			return err
 		}
@@ -111,7 +115,7 @@ func SetSym(args []string) error {
 		}
 	}
 	for _, s := range conf.Bin {
-		absTarget, err := filepath.Abs(filepath.Join(args[0], s))
+		absTarget, err := filepath.Abs(filepath.Join(arg, s))
 		if err != nil {
 			return err
 		}
@@ -128,8 +132,8 @@ func SetSym(args []string) error {
 	return nil
 }
 
-func UnsetSym(args []string) error {
-	conf, err := readTidyConf(args[0])
+func UnsetSym(arg string) error {
+	conf, err := readTidyConf(arg)
 	if err != nil {
 		return err
 	}
