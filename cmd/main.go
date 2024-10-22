@@ -1,5 +1,194 @@
 package main
 
+import (
+	"encoding/json"
+	"errors"
+	"os"
+	"path/filepath"
+
+	"github.com/adrg/xdg"
+	"github.com/spf13/cobra"
+)
+
+type TidyConf struct {
+	Config []string `json:"config"`
+	Home   []string `json:"home"`
+	Bin    []string `json:"bin"`
+}
+
 func main() {
-	println("Hello world")
+	var set bool
+	var unset bool
+
+	rootCmd := &cobra.Command{
+		Use:   "tidy",
+		Short: "Tidy Dotfile Manager",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			var err error
+			if set {
+				err = SetSym(args)
+			} else if unset {
+				err = UnsetSym(args)
+			} else {
+				cmd.Help()
+			}
+			return err
+		},
+		Example: "tidy [-s | -u] [directory | *]",
+	}
+
+	rootCmd.Flags().
+		BoolVarP(&set, "set", "s", false, "use to create symlinks, mutually exclusive with unset")
+	rootCmd.Flags().
+		BoolVarP(&unset, "unset", "u", false, "use to remove symlinks, mutually exclusive with set")
+	rootCmd.MarkFlagsMutuallyExclusive("set", "unset")
+
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
+}
+
+func readTidyConf(path string) (TidyConf, error) {
+	var conf TidyConf
+
+	fs, err := os.Stat(path)
+	if err != nil {
+		return conf, err
+	}
+
+	if fs.IsDir() {
+		path := filepath.Join(path, ".tidy.json")
+		_, err := os.Stat(path)
+		if err != nil {
+			return conf, err
+		}
+
+		contents, err := os.ReadFile(path)
+		if err != nil {
+			return conf, err
+		}
+
+		err = json.Unmarshal(contents, &conf)
+		if err != nil {
+			return conf, err
+		}
+	}
+
+	return conf, nil
+}
+
+func SetSym(args []string) error {
+	conf, err := readTidyConf(args[0])
+	if err != nil {
+		return err
+	}
+
+	for _, s := range conf.Home {
+		absTarget, err := filepath.Abs(filepath.Join(args[0], s))
+		if err != nil {
+			return err
+		}
+		err = os.Symlink(absTarget, filepath.Join(xdg.Home, s))
+		if err != nil {
+			if errors.Is(err, os.ErrExist) {
+				continue
+			}
+
+			return err
+		}
+	}
+	for _, s := range conf.Config {
+		absTarget, err := filepath.Abs(filepath.Join(args[0], s))
+		if err != nil {
+			return err
+		}
+		err = os.Symlink(absTarget, filepath.Join(xdg.ConfigHome, s))
+		if err != nil {
+			if errors.Is(err, os.ErrExist) {
+				continue
+			}
+			return err
+		}
+	}
+	for _, s := range conf.Bin {
+		absTarget, err := filepath.Abs(filepath.Join(args[0], s))
+		if err != nil {
+			return err
+		}
+
+		err = os.Symlink(absTarget, filepath.Join(xdg.BinHome, s))
+		if err != nil {
+			if errors.Is(err, os.ErrExist) {
+				continue
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func UnsetSym(args []string) error {
+	conf, err := readTidyConf(args[0])
+	if err != nil {
+		return err
+	}
+
+	for _, s := range conf.Home {
+		path := filepath.Join(xdg.Home, s)
+
+		f, err := os.Lstat(path)
+		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			}
+			return err
+		}
+
+		if f.Mode()&os.ModeSymlink != 0 {
+			err = os.Remove(path)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	for _, s := range conf.Config {
+		path := filepath.Join(xdg.ConfigHome, s)
+
+		f, err := os.Lstat(path)
+		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			}
+			return err
+		}
+
+		if f.Mode()&os.ModeSymlink != 0 {
+			err = os.Remove(path)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	for _, s := range conf.Bin {
+		path := filepath.Join(xdg.BinHome, s)
+
+		f, err := os.Lstat(path)
+		if err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			}
+			return err
+		}
+
+		if f.Mode()&os.ModeSymlink != 0 {
+			err = os.Remove(path)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
