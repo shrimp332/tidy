@@ -14,10 +14,10 @@ Flags:
   -s, --set     use to create symlinks, mutually exclusive with unset
   -u, --unset   use to remove symlinks, mutually exclusive with set
 ```
-## Install
-### Dependancies
+## Installation
+### Dependencies
 - [Go](https://go.dev/)
-### Install
+### Build from source
 ```sh
 git clone https://github.com/shrimp332/tidy
 cd tidy
@@ -64,7 +64,7 @@ dotfiles/
   "bin": ["increasevol.sh"]
 }
 
-// dotfiles/passwords/.tidy.json
+// dotfiles/other/.tidy.json
 {
   "custom": {
     "~/Notes": ["obsidian"],
@@ -76,6 +76,6 @@ dotfiles/
 ### Commands
 ```sh
 cd dotfiles
-tidy -s * # To create both zsh and scripts symlinks
+tidy -s * # To create zsh, scripts, and other symlinks
 tidy -u scripts # To delete scripts symlink
 ```
