@@ -26,9 +26,12 @@ sudo make install
 ## Config File
 ```jsonc
 {
-	"home": [], // ~/
-	"config": [], // ~/.config
-	"bin": [] // ~/.local/bin
+  "home": [], // ~/
+  "config": [], // ~/.config
+  "bin": [], // ~/.local/bin
+  "custom": {
+    "directory": [] // custom location
+  }
 }
 ```
 ## Usage
@@ -38,23 +41,37 @@ dotfiles/
 ├── scripts/
 │  ├── .tidy.json
 │  └── increasevol.sh
-└── zsh/
+├── zsh/
+│  ├── .tidy.json
+│  ├── .zshrc
+│  ├── .zshenv
+│  └── zsh/
+└── other/
    ├── .tidy.json
-   ├── .zshrc
-   └── zsh/
+   ├── passwords.kdbx
+   └── obsidian/
 ```
 ### Config File
 ```jsonc
 // dotfiles/zsh/.tidy.json
 {
-	"home": [".zshrc"],
-	"config": ["zsh"]
+  "home": [".zshrc", ".zshenv"],
+  "config": ["zsh"]
 }
 
 // dotfiles/scripts/.tidy.json
 {
-	"bin": ["increasevol.sh"]
+  "bin": ["increasevol.sh"]
 }
+
+// dotfiles/passwords/.tidy.json
+{
+  "custom": {
+    "~/Notes": ["obsidian"],
+    "~/Documents": ["passwords.kbdx"]
+  }
+}
+
 ```
 ### Commands
 ```sh

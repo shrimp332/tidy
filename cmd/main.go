@@ -6,15 +6,17 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/adrg/xdg"
 	"github.com/spf13/cobra"
 )
 
 type TidyConf struct {
-	Config []string `json:"config"`
-	Home   []string `json:"home"`
-	Bin    []string `json:"bin"`
+	Config []string            `json:"config"`
+	Home   []string            `json:"home"`
+	Bin    []string            `json:"bin"`
+	Custom map[string][]string `json:"custom"`
 }
 
 func main() {
@@ -31,6 +33,7 @@ func main() {
 					err = SetSym(arg)
 					if errors.Is(err, os.ErrNotExist) {
 						fmt.Fprintln(os.Stderr, arg, "does not have a .tidy.json file")
+						fmt.Fprintln(os.Stderr, err)
 						err = nil
 					} else if err != nil {
 						return err
@@ -142,6 +145,32 @@ func SetSym(arg string) error {
 		}
 	}
 
+	for k, c := range conf.Custom {
+		for _, s := range c {
+			absTarget, err := filepath.Abs(filepath.Join(arg, s))
+			if err != nil {
+				return err
+			}
+
+			var symPath string
+			if strings.HasPrefix(k, "~") {
+				homeDir, err := os.UserHomeDir()
+				if err != nil {
+					return err
+				}
+				symPath = filepath.Join(homeDir, k[1:], s)
+			}
+
+			err = os.Symlink(absTarget, symPath)
+			if err != nil {
+				if errors.Is(err, os.ErrExist) {
+					continue
+				}
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -207,5 +236,35 @@ func UnsetSym(arg string) error {
 			}
 		}
 	}
+
+	for k, c := range conf.Custom {
+		for _, s := range c {
+			var symPath string
+
+			if strings.HasPrefix(k, "~") {
+				homeDir, err := os.UserHomeDir()
+				if err != nil {
+					return err
+				}
+				symPath = filepath.Join(homeDir, k[1:], s)
+			}
+
+			f, err := os.Lstat(symPath)
+			if err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					continue
+				}
+				return err
+			}
+
+			if f.Mode()&os.ModeSymlink != 0 {
+				err = os.Remove(symPath)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
 	return nil
 }
