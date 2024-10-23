@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -28,10 +29,22 @@ func main() {
 			if set {
 				for _, arg := range args {
 					err = SetSym(arg)
+					if errors.Is(err, os.ErrNotExist) {
+						fmt.Fprintln(os.Stderr, arg, "does not have a .tidy.json file")
+						err = nil
+					} else if err != nil {
+						return err
+					}
 				}
 			} else if unset {
 				for _, arg := range args {
 					err = UnsetSym(arg)
+					if errors.Is(err, os.ErrNotExist) {
+						fmt.Fprintln(os.Stderr, arg, "does not have a .tidy.json file")
+						err = nil
+					} else if err != nil {
+						return err
+					}
 				}
 			} else {
 				cmd.Help()
