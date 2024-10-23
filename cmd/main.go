@@ -118,6 +118,14 @@ func SetSym(arg string) error {
 		}
 	}
 	for _, s := range conf.Config {
+		_, err := os.Stat(xdg.ConfigHome)
+		if errors.Is(err, os.ErrNotExist) {
+			err := os.MkdirAll(xdg.ConfigHome, 0755)
+			if err != nil {
+				return err
+			}
+		}
+
 		absTarget, err := filepath.Abs(filepath.Join(arg, s))
 		if err != nil {
 			return err
@@ -131,6 +139,14 @@ func SetSym(arg string) error {
 		}
 	}
 	for _, s := range conf.Bin {
+		_, err := os.Stat(xdg.BinHome)
+		if errors.Is(err, os.ErrNotExist) {
+			err := os.MkdirAll(xdg.BinHome, 0755)
+			if err != nil {
+				return err
+			}
+		}
+
 		absTarget, err := filepath.Abs(filepath.Join(arg, s))
 		if err != nil {
 			return err
@@ -152,15 +168,24 @@ func SetSym(arg string) error {
 				return err
 			}
 
-			var symPath string
+			var destPath string
 			if strings.HasPrefix(k, "~") {
 				homeDir, err := os.UserHomeDir()
 				if err != nil {
 					return err
 				}
-				symPath = filepath.Join(homeDir, k[1:], s)
+				destPath = filepath.Join(homeDir, k[1:])
 			}
 
+			_, err = os.Stat(destPath)
+			if errors.Is(err, os.ErrNotExist) {
+				err := os.MkdirAll(destPath, 0755)
+				if err != nil {
+					return err
+				}
+			}
+
+			symPath := filepath.Join(destPath, s)
 			err = os.Symlink(absTarget, symPath)
 			if err != nil {
 				if errors.Is(err, os.ErrExist) {
@@ -200,6 +225,7 @@ func UnsetSym(arg string) error {
 	}
 
 	for _, s := range conf.Config {
+
 		path := filepath.Join(xdg.ConfigHome, s)
 
 		f, err := os.Lstat(path)
@@ -239,8 +265,8 @@ func UnsetSym(arg string) error {
 
 	for k, c := range conf.Custom {
 		for _, s := range c {
-			var symPath string
 
+			var symPath string
 			if strings.HasPrefix(k, "~") {
 				homeDir, err := os.UserHomeDir()
 				if err != nil {
