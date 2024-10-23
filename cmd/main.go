@@ -22,7 +22,7 @@ func main() {
 
 	rootCmd := &cobra.Command{
 		Use:   "tidy",
-		Short: "Tidy Dotfile Manager",
+		Short: "Tidy Dotfile Linker",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			var err error
 			if set {

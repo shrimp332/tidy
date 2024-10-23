@@ -1,7 +1,7 @@
 # Tidy
-Make symlinks from a dotfile dir. Like gnu stow, but use config files instead
+Create symlinks for your dotfiles
 ```
-Tidy Dotfile Manager
+Tidy Dotfile Linker
 
 Usage:
   tidy [flags]
@@ -14,15 +14,24 @@ Flags:
   -s, --set     use to create symlinks, mutually exclusive with unset
   -u, --unset   use to remove symlinks, mutually exclusive with set
 ```
+## Install
+### Dependancies
+- [Go](https://go.dev/)
+### Install
+```sh
+git clone https://github.com/shrimp332/tidy
+cd tidy
+sudo make install
+```
 ## Config File
 ```jsonc
 {
-	"home": [], // ~
+	"home": [], // ~/
 	"config": [], // ~/.config
 	"bin": [] // ~/.local/bin
 }
 ```
-## Example
+## Usage
 ### File Structure
 ```
 dotfiles/
@@ -46,4 +55,10 @@ dotfiles/
 {
 	"bin": ["increasevol.sh"]
 }
+```
+### Commands
+```sh
+cd dotfiles
+tidy -s * # To create both zsh and scripts symlinks
+tidy -u scripts # To delete scripts symlink
 ```
