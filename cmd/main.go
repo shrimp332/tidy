@@ -175,6 +175,8 @@ func SetSym(arg string) error {
 					return err
 				}
 				destPath = filepath.Join(homeDir, k[1:])
+			} else {
+				destPath = k
 			}
 
 			_, err = os.Stat(destPath)
