@@ -21,7 +21,8 @@ Flags:
 ```sh
 git clone https://github.com/shrimp332/tidy
 cd tidy
-sudo make install
+sudo make install # installs to /usr/local/bin
+# or `make install-local` # installs to ~/.local/bin
 ```
 ## Config File
 ```jsonc
