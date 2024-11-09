@@ -1,7 +1,7 @@
 # Tidy
 Create symlinks for your dotfiles
 ```
-Tidy Dotfile Linker
+Tidy Dotfile Linker v1.1.0
 
 Usage:
   tidy [flags]
@@ -15,14 +15,19 @@ Flags:
   -u, --unset   use to remove symlinks, mutually exclusive with set
 ```
 ## Installation
-### Dependencies
-- [Go](https://go.dev/)
 ### Build from source
+#### Dependencies
+- [Go](https://go.dev/)
+#### Install
 ```sh
 git clone https://github.com/shrimp332/tidy
 cd tidy
 sudo make install # installs to /usr/local/bin
 # or `make install-local` # installs to ~/.local/bin
+```
+### Using Go
+```sh
+go install github.com/shrimp332/tidy/cmd/tidy@latest
 ```
 ## Config File
 ```jsonc
