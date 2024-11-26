@@ -1,7 +1,7 @@
 # Tidy
 Create symlinks for your dotfiles
 ```
-Tidy Dotfile Linker v1.1.0
+Tidy Dotfile Linker v1.2.0
 
 Usage:
   tidy [flags]
@@ -29,6 +29,27 @@ sudo make install # installs to /usr/local/bin
 ### Using Go
 ```sh
 go install github.com/shrimp332/tidy/cmd/tidy@latest
+```
+### Archlinux
+#### Makepkg
+Manual way of making package. Will require manual updates
+(it's not in the aur)
+```sh
+git clone https://github.com/shrimp332/tidy/cmd/tidy
+cd tidy
+makepkg -si
+```
+#### [Paru](https://github.com/Morganamilo/paru)
+Add this repo as a paru source:  
+Add this to `/etc/paru.conf`
+```
+[TIDY]
+Url = https://github.com/shrimp332/tidy
+Depth = 1
+```
+then run
+```sh
+paru -Sy TIDY/tidy-git
 ```
 ## Config File
 ```jsonc
