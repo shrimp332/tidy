@@ -10,14 +10,14 @@ import (
 	"github.com/adrg/xdg"
 )
 
-func SetSym(arg string) error {
+func SetSym(arg string, force bool) error {
 	conf, err := readTidyConf(arg)
 	if err != nil {
 		return err
 	}
 
 	for _, s := range conf.Home {
-		err := link(arg, s, xdg.Home)
+		err := link(arg, s, xdg.Home, force)
 		if err != nil {
 			return err
 		}
@@ -31,7 +31,7 @@ func SetSym(arg string) error {
 		}
 	}
 	for _, s := range conf.Config {
-		err := link(arg, s, xdg.ConfigHome)
+		err := link(arg, s, xdg.ConfigHome, force)
 		if err != nil {
 			return err
 		}
@@ -45,7 +45,7 @@ func SetSym(arg string) error {
 		}
 	}
 	for _, s := range conf.Bin {
-		err := link(arg, s, xdg.BinHome)
+		err := link(arg, s, xdg.BinHome, force)
 		if err != nil {
 			return err
 		}
@@ -73,7 +73,7 @@ func SetSym(arg string) error {
 				}
 			}
 
-			err = link(arg, s, destPath)
+			err = link(arg, s, destPath, force)
 			if err != nil {
 				return err
 			}
@@ -84,7 +84,7 @@ func SetSym(arg string) error {
 	return nil
 }
 
-func link(arg, s, dest string) error {
+func link(arg, s, dest string, force bool) error {
 	absTarget, err := filepath.Abs(filepath.Join(arg, s))
 	if err != nil {
 		return err
@@ -92,7 +92,18 @@ func link(arg, s, dest string) error {
 	err = os.Symlink(absTarget, filepath.Join(dest, s))
 	if err != nil {
 		if errors.Is(err, os.ErrExist) {
-			fmt.Println(err)
+			if force {
+				err := os.RemoveAll(filepath.Join(dest, s))
+				if err != nil {
+					return err
+				}
+				err = os.Symlink(absTarget, filepath.Join(dest, s))
+				if err != nil {
+					return err
+				}
+			} else {
+				fmt.Println(err)
+			}
 			return nil
 		}
 

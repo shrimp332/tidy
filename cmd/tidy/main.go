@@ -10,12 +10,14 @@ import (
 	"github.com/shrimp332/tidy/internal/linker"
 )
 
-var version = "v1.1.0"
+var (
+	version = "v1.1.0"
+	set     bool
+	unset   bool
+	force   bool
+)
 
 func main() {
-	var set bool
-	var unset bool
-
 	rootCmd := &cobra.Command{
 		Use:   "tidy",
 		Short: "Tidy Dotfile Linker " + version,
@@ -23,7 +25,7 @@ func main() {
 			var err error
 			if set {
 				for _, arg := range args {
-					err = linker.SetSym(arg)
+					err = linker.SetSym(arg, force)
 					if errors.Is(err, os.ErrNotExist) {
 						fmt.Fprintln(os.Stderr, arg, "does not have a .tidy.json file")
 						fmt.Fprintln(os.Stderr, err)
@@ -54,6 +56,8 @@ func main() {
 		BoolVarP(&set, "set", "s", false, "use to create symlinks, mutually exclusive with unset")
 	rootCmd.Flags().
 		BoolVarP(&unset, "unset", "u", false, "use to remove symlinks, mutually exclusive with set")
+	rootCmd.Flags().
+		BoolVarP(&force, "force", "f", false, "overwrite existing files")
 	rootCmd.MarkFlagsMutuallyExclusive("set", "unset")
 
 	if err := rootCmd.Execute(); err != nil {

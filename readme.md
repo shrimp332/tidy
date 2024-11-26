@@ -10,6 +10,7 @@ Examples:
 tidy [-s | -u] [directory | *]
 
 Flags:
+  -f, --force   overwrite existing files
   -h, --help    help for tidy
   -s, --set     use to create symlinks, mutually exclusive with unset
   -u, --unset   use to remove symlinks, mutually exclusive with set
