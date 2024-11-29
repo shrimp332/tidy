@@ -7,7 +7,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/shrimp332/tidy/internal/linker"
+	"github.com/shrimp332/tidy/linker"
 )
 
 var (

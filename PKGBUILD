@@ -1,7 +1,7 @@
 pkgname=tidy-git
 _pkgname=tidy
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='dotfile symlinker'
 arch=('x86_64')
 url="https://github.com/shrimp332/tidy"
@@ -18,7 +18,7 @@ pkgver() {
 
 build() {
 	cd "$_pkgname"
-	make DESTDIR="$pkgdir/" build
+	make
 }
 
 package() {

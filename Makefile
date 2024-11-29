@@ -27,6 +27,6 @@ uninstall-local: ~/.local/bin/$(BIN)
 bin/$(BIN): $(SRC)
 	@mkdir -p ./bin
 	@go mod tidy
-	@go build -o ./bin/$(BIN) ./cmd/$(BIN)/main.go
+	@go build -o ./bin/$(BIN) .
 
 .PHONY: all build run test clean install install-local uninstall-local
