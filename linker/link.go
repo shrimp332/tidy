@@ -10,14 +10,14 @@ import (
 	"github.com/adrg/xdg"
 )
 
-func SetSym(arg string, force bool) error {
-	conf, err := readTidyConf(arg)
+func SetSym(path string, force bool) error {
+	conf, err := readTidyConf(path)
 	if err != nil {
 		return err
 	}
 
 	for _, s := range conf.Home {
-		err := link(arg, s, xdg.Home, force)
+		err := link(path, s, xdg.Home, force)
 		if err != nil {
 			return err
 		}
@@ -31,7 +31,7 @@ func SetSym(arg string, force bool) error {
 		}
 	}
 	for _, s := range conf.Config {
-		err := link(arg, s, xdg.ConfigHome, force)
+		err := link(path, s, xdg.ConfigHome, force)
 		if err != nil {
 			return err
 		}
@@ -45,7 +45,7 @@ func SetSym(arg string, force bool) error {
 		}
 	}
 	for _, s := range conf.Bin {
-		err := link(arg, s, xdg.BinHome, force)
+		err := link(path, s, xdg.BinHome, force)
 		if err != nil {
 			return err
 		}
@@ -73,7 +73,7 @@ func SetSym(arg string, force bool) error {
 				}
 			}
 
-			err = link(arg, s, destPath, force)
+			err = link(path, s, destPath, force)
 			if err != nil {
 				return err
 			}
