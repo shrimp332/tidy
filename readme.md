@@ -40,16 +40,9 @@ cd tidy
 makepkg -si
 ```
 #### [Paru](https://github.com/Morganamilo/paru)
-Add this repo as a paru source:  
-Add this to `/etc/paru.conf`
-```
-[TIDY]
-Url = https://github.com/shrimp332/tidy
-Depth = 1
-```
-then run
+Add [this](https://github.com/shrimp332/shrimp-ur) as a paru repo. ([instructions](https://github.com/shrimp332/shrimp-ur/blob/main/readme.md))
 ```sh
-paru -Sy TIDY/tidy-git
+paru tidy-git
 ```
 ## Config File
 ```jsonc
