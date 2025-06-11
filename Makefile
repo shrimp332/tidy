@@ -1,7 +1,7 @@
 BIN = tidy
 SRC = $(shell find . -name '*.go')
 
-all: build
+all: test build
 
 build: bin/$(BIN)
 
