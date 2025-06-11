@@ -23,7 +23,7 @@ func SetSym(path string, force bool) error {
 				if err != nil {
 					return err
 				}
-			} else if !force {
+			} else if errors.Is(err, os.ErrExist) && !force {
 				continue
 			} else {
 				return err
