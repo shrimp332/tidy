@@ -9,7 +9,7 @@ clean:
 	@rm ./bin/$(BIN)
 
 test:
-	@go test -v ./test/...
+	@go test -v ./...
 
 install: build
 	@cp ./bin/$(BIN) /usr/local/bin
