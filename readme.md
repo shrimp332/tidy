@@ -1,7 +1,7 @@
 # Tidy
 Create symlinks for your dotfiles
 ```
-Tidy Dotfile Linker v1.2.0
+Tidy Dotfile Linker v1.2.1
 
 Usage:
   tidy [flags]
