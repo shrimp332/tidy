@@ -68,7 +68,7 @@ func TestGetLinkPaths(t *testing.T) {
 		}
 	}`)
 
-	os.WriteFile(filepath.Join(tmpDir, ".tidy.json"), sample, 0600)
+	err = os.WriteFile(filepath.Join(tmpDir, ".tidy.json"), sample, 0600)
 	if err != nil {
 		t.Fatal("Failed to setup test - Create /tmp/tidy-test-/.tidy.json")
 	}
