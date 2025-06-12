@@ -35,7 +35,7 @@ go install github.com/shrimp332/tidy/cmd/tidy@latest
 Manual way of making package. Will require manual updates
 (it's not in the aur)
 ```sh
-git clone https://github.com/shrimp332/tidy
+git clone https://github.com/shrimp332/shrimp-ur
 cd tidy
 makepkg -si
 ```
