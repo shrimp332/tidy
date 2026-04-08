@@ -28,12 +28,12 @@ func main() {
 	setCommand := &cobra.Command{
 		Use:   "set [directory | *]",
 		Short: "Create symlinks",
+		Aliases: []string{"s"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			for _, arg := range args {
 				err := linker.SetSym(arg, force)
 				if errors.Is(err, os.ErrNotExist) {
 					fmt.Fprintln(os.Stderr, arg, "does not have a .tidy.json file")
-					fmt.Fprintln(os.Stderr, err)
 					err = nil
 				} else if err != nil {
 					return err
@@ -47,9 +47,11 @@ func main() {
 		BoolVarP(&force, "force", "f", false, "overwrite existing files")
 	rootCmd.AddCommand(setCommand)
 
+
 	unsetCommand := &cobra.Command{
 		Use:   "unset [directory | *]",
 		Short: "Delete symlinks",
+		Aliases: []string{"u"},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			for _, arg := range args {
 				err := linker.UnsetSym(arg)
