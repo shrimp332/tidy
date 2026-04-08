@@ -60,6 +60,24 @@ func main() {
 		BoolVarP(&force, "force", "f", false, "overwrite existing files")
 	rootCmd.MarkFlagsMutuallyExclusive("set", "unset")
 
+	completionCmd := &cobra.Command{
+		Use:    "completion [bash|zsh]",
+		Short:  "Generate completion script",
+		Args:   cobra.ExactArgs(1),
+		Hidden: true,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			switch args[0] {
+			case "bash":
+				return rootCmd.GenBashCompletion(os.Stdout)
+			case "zsh":
+				return rootCmd.GenZshCompletion(os.Stdout)
+			}
+			return nil
+		},
+	}
+
+	rootCmd.AddCommand(completionCmd)
+
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
