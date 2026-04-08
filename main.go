@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	version = "v1.2.1"
+	version = "v2.0.0"
 	force   bool
 )
 
