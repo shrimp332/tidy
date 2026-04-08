@@ -1,4 +1,4 @@
-module github.com/shrimp332/tidy
+module github.com/shrimp332/tidy/v2
 
 go 1.23
 

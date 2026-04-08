@@ -7,11 +7,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/shrimp332/tidy/linker"
+	"github.com/shrimp332/tidy/v2/linker"
 )
 
 var (
-	version = "v1.2.1"
+	version = "v2.0.0"
 	force   bool
 )
 
