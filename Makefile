@@ -1,7 +1,8 @@
 BIN = tidy
 SRC = $(shell find . -name '*.go')
+PREFIX ?= /usr/local
 
-all: test build
+all: build
 
 build: bin/$(BIN)
 
@@ -12,21 +13,14 @@ test:
 	@go test -v ./...
 
 install: build
-	@cp ./bin/$(BIN) /usr/local/bin
+	@cp ./bin/$(BIN) $(PREFIX)/bin
 
-install-local: build
-	@mkdir -p ~/.local/bin
-	@cp ./bin/$(BIN) ~/.local/bin
-
-uninstall: /usr/local/bin/$(BIN)
-	@rm /usr/local/bin/$(BIN)
-
-uninstall-local: ~/.local/bin/$(BIN)
-	@rm ~/.local/bin/$(BIN)
+uninstall: $(PREFIX)/bin/$(BIN)
+	@rm $(PREFIX)/bin/$(BIN)
 
 bin/$(BIN): $(SRC)
 	@mkdir -p ./bin
 	@go mod tidy
 	@go build -o ./bin/$(BIN) .
 
-.PHONY: all build run test clean install install-local uninstall-local
+.PHONY: all build test run clean install
