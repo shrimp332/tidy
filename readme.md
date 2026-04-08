@@ -31,7 +31,7 @@ sudo make install
 `make install PREFIX=~/.local` for a user install (assumes ~/.local/bin is in your PATH)
 ### Using Go
 ```sh
-go install github.com/shrimp332/tidy/cmd/tidy@latest
+go install github.com/shrimp332/tidy@latest
 ```
 ### Archlinux
 #### Makepkg
