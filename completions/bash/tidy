@@ -434,7 +434,15 @@ _tidy_root_command()
     commands=()
     commands+=("help")
     commands+=("set")
+    if [[ -z "${BASH_VERSION:-}" || "${BASH_VERSINFO[0]:-}" -gt 3 ]]; then
+        command_aliases+=("s")
+        aliashash["s"]="set"
+    fi
     commands+=("unset")
+    if [[ -z "${BASH_VERSION:-}" || "${BASH_VERSINFO[0]:-}" -gt 3 ]]; then
+        command_aliases+=("u")
+        aliashash["u"]="unset"
+    fi
 
     flags=()
     two_word_flags=()
