@@ -28,10 +28,10 @@ git clone https://github.com/shrimp332/tidy
 cd tidy
 sudo make install
 ```
-`make install PREFIX=~/.local` for a user install (assumes ~/.local/bin is in your PATH)
+`make install PREFIX=~/.local` for a user install (assuming ~/.local/bin is in your PATH)
 ### Using Go
 ```sh
-go install github.com/shrimp332/tidy/cmd/tidy@latest
+go install github.com/shrimp332/tidy/v2@latest
 ```
 ### Archlinux
 #### Makepkg
