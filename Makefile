@@ -5,6 +5,10 @@ PREFIX ?= /usr/local
 all: build
 
 build: bin/$(BIN)
+	@mkdir -p ./completions/bash
+	@mkdir -p ./completions/zsh
+	@./bin/$(BIN) completion bash > completions/bash/tidy
+	@./bin/$(BIN) completion zsh > completions/zsh/_tidy
 
 clean:
 	@rm ./bin/$(BIN)
